@@ -1,6 +1,6 @@
-// src/pages/Home.js
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import "../css/home.css";
 import api from '../utils/api';
 
 const Home = () => {
@@ -10,7 +10,7 @@ const Home = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await api.get('/me');
+        const res = await api.get('/user');
         setUser(res.data);
       } catch (err) {
         localStorage.removeItem('token');
@@ -23,9 +23,8 @@ const Home = () => {
 
   const handleLogout = async () => {
     try {
-      await api.post('/logout'); // adjust if your API uses a different method
+      await api.post('/logout');
     } catch (err) {
-      // optional: show error message
       console.error('Logout failed', err);
     } finally {
       localStorage.removeItem('token');
@@ -33,15 +32,15 @@ const Home = () => {
     }
   };
 
-  if (!user) return <p>Loading...</p>;
+  if (!user) return <div className="home-loading">Loading...</div>;
 
   return (
-    <div style={{ padding: '2rem' }}>
-      <h2>Hello, {user.name}</h2>
-      <p>Email: {user.email}</p>
-      <button onClick={handleLogout} style={{ marginTop: '1rem' }}>
-        Logout
-      </button>
+    <div className="home-container">
+      <div className="home-card">
+        <h2>Welcome, <span className="home-name">{user.name}</span></h2>
+        <p className="home-email">📧 {user.email}</p>
+        <button className="home-logout-btn" onClick={handleLogout}>Logout</button>
+      </div>
     </div>
   );
 };
